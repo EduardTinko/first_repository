@@ -1,5 +1,16 @@
 def parse(query: str) -> dict:
-    return {}
+    query_dict = {}
+    if '?' in query:
+        query_page = query.split('?', 1)[1]
+        if query_page:
+            key_value = [item for item in query_page.split('&')]
+            for item in key_value:
+                if '=' in item:
+                    key, value = item.split('=', 1)
+                    query_dict.update([(key, value)])
+        return query_dict
+    else:
+        return query_dict
 
 
 if __name__ == '__main__':
@@ -8,6 +19,11 @@ if __name__ == '__main__':
     assert parse('http://example.com/') == {}
     assert parse('http://example.com/?') == {}
     assert parse('http://example.com/?name=Dima') == {'name': 'Dima'}
+    assert parse('https://example.com/path/to/page?&color=purple???&') == {'color': 'purple???'}
+    assert parse('https://example.com/path/to/page?name=Dima==&age23') == {'name': 'Dima=='}
+    assert parse('https://example.com/path/?name=Dima&age=23&sex=men') == {'name': 'Dima', 'age': '23', 'sex': 'men'}
+    assert parse('https://example.com/path/to/page?&&??') == {}
+    assert parse('https://example.com/path/to/page?name=Dima&age=23??&') == {'name': 'Dima', 'age': '23??'}
 
 
 def parse_cookie(query: str) -> dict:
