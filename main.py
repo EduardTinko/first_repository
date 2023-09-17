@@ -11,7 +11,17 @@ if __name__ == '__main__':
 
 
 def parse_cookie(query: str) -> dict:
-    return {}
+    query_dict = {}
+    if query:
+        key_value = query.split(';')
+        for item in key_value:
+            if '=' in item:
+                key, value = item.split('=', 1)
+                query_dict.update([(key, value)])
+        return query_dict
+
+    else:
+        return query_dict
 
 
 if __name__ == '__main__':
@@ -19,4 +29,12 @@ if __name__ == '__main__':
     assert parse_cookie('') == {}
     assert parse_cookie('name=Dima;age=28;') == {'name': 'Dima', 'age': '28'}
     assert parse_cookie('name=Dima=User;age=28;') == {'name': 'Dima=User', 'age': '28'}
+    assert parse_cookie(';name=Dima=;age=28') == {'name': 'Dima=', 'age': '28'}
+    assert parse_cookie('name=Dima;age=28;sex=men') == {'name': 'Dima', 'age': '28', 'sex': 'men'}
+    assert parse_cookie(';name=Dima;age=28?;') == {'name': 'Dima', 'age': '28?'}
+    assert parse_cookie('nameDima;age=28;sex=men') == {'age': '28', 'sex': 'men'}
+    assert parse_cookie('nameDima;') == {}
+    assert parse_cookie('name-Dima;age-28;sex-men') == {}
+
+
 
